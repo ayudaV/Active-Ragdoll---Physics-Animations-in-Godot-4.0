@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=3 uid="uid://8bkjpf0jxoqo"]
+
+[ext_resource type="Script" path="res://scripts/bomb.gd" id="1_euueh"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tpxar"]
+albedo_color = Color(0.0728426, 0.0728426, 0.0728426, 1)
+roughness = 0.5
+
+[sub_resource type="SphereMesh" id="SphereMesh_vfo51"]
+material = SubResource("StandardMaterial3D_tpxar")
+radius = 0.1
+height = 0.2
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_xkxdy"]
+radius = 0.1
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_xqcbi"]
+radius = 3.0
+
+[node name="Bomb" type="RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6325, 0.493058, 0)
+collision_layer = 3
+collision_mask = 3
+script = ExtResource("1_euueh")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_vfo51")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_xkxdy")
+
+[node name="Area" type="Area3D" parent="."]
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area"]
+shape = SubResource("SphereShape3D_xqcbi")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+autostart = true
+
+[connection signal="body_entered" from="Area" to="." method="_on_area_body_entered"]
+[connection signal="body_exited" from="Area" to="." method="_on_area_body_exited"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
